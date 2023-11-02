@@ -39,8 +39,8 @@ public class ProductoController {
         }
     }
 
-    @PostMapping("/guardar")
-    public ResponseEntity<String> guardarProducto(@RequestBody Producto producto) {
+    @PostMapping("/crear")
+    public ResponseEntity<String> crearProducto(@RequestBody Producto producto) {
         try {
             productoService.guardarProducto(producto);
             return ResponseEntity.ok().body(Constantes.SOLICITUD_EXITOSA);
