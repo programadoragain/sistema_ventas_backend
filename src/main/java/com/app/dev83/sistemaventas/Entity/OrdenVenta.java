@@ -1,5 +1,6 @@
 package com.app.dev83.sistemaventas.Entity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -19,17 +20,25 @@ public class OrdenVenta {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="valor_total")
-    private Double valorTotal;
+    @Column(name = "valor_total")
+    private Float valorTotal;
 
-    @Column(name="fecha_creacion")
+    @Column(name = "metodo_pago")
+    private MetodoPago metodoPago;
+
+    @Column(name = "fecha_creacion")
     private Date fechaCreacion;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    @Column(name="detalle_ventas")
     @OneToMany
+    @Column(name = "detalle_ventas")
     private List<DetalleVenta> detalleVenta;
+
+    public String getFechaCreacionConFormato() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/YY HH:mm:ss");
+        return formatter.format(fechaCreacion);
+    }
 }

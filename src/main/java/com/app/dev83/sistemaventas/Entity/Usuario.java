@@ -14,8 +14,7 @@ public class Usuario {
     private String nombre;
     private String apellido;
     private String email;
-    private String username;
     private String password;
     private Rol role;
-    private boolean activo;
+    private String status;
 }

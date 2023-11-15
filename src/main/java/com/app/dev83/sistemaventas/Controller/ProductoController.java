@@ -19,10 +19,23 @@ public class ProductoController {
     @Autowired
     private ProductoService productoService;
 
+    @PostMapping("/registrar")
+    public ResponseEntity<String> registrarProducto(@RequestBody Producto producto) {
+        try {
+            productoService.guardarProducto(producto);
+            return ResponseEntity.ok().body(Constantes.SOLICITUD_EXITOSA);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.badRequest().body(Constantes.OCURRIO_UN_ERROR);
+        }
+    }
+
     @GetMapping("/listar")
     public ResponseEntity<List<Producto>> listarProductos() {
         try {
             return ResponseEntity.ok().body(productoService.listarProductos());
+
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.badRequest().body(new ArrayList<>());
@@ -33,21 +46,11 @@ public class ProductoController {
     public ResponseEntity<Producto> obtenerProductoPorId(@PathVariable("id") String id) {
         try {
             return ResponseEntity.ok().body(productoService.obtenerProductoPorId(id));
+
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.badRequest().body(new Producto());
         }
-    }
-
-    @PostMapping("/crear")
-    public ResponseEntity<String> crearProducto(@RequestBody Producto producto) {
-        try {
-            productoService.guardarProducto(producto);
-            return ResponseEntity.ok().body(Constantes.SOLICITUD_EXITOSA);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ResponseEntity.badRequest().body(Constantes.OCURRIO_UN_ERROR);
-    }
     }
 
     @PutMapping("/actualizar")

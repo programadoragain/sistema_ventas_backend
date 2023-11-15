@@ -4,7 +4,6 @@ import com.app.dev83.sistemaventas.Constants.Constantes;
 import com.app.dev83.sistemaventas.Entity.Usuario;
 import com.app.dev83.sistemaventas.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +19,11 @@ public class UsuarioController {
     @Autowired
     UsuarioService usuarioService;
 
-    @PostMapping("/crear")
-    public ResponseEntity<String> crearUsuario(Map<String,String> requestMap) {
+    @PostMapping("/registrar")
+    public ResponseEntity<String> registrarUsuario(Map<String,String> requestMap) {
         try{
-            return usuarioService.crearUsuario(requestMap);
+            usuarioService.registrarUsuario(requestMap);
+            return ResponseEntity.ok().body(Constantes.SOLICITUD_EXITOSA);
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.badRequest().body(Constantes.OCURRIO_UN_ERROR);
@@ -33,7 +33,7 @@ public class UsuarioController {
     @PostMapping("/login")
     public ResponseEntity<String> login(Map<String, String> requestMap) {
         try {
-            return usuarioService.login(requestMap);
+            return ResponseEntity.accepted().body(usuarioService.login(requestMap));
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -55,7 +55,7 @@ public class UsuarioController {
     @PutMapping("/actualizar")
     public ResponseEntity<String> actualizarUsuario(Map<String, String> requestMap) {
         try{
-            return usuarioService.update(requestMap);
+            return ResponseEntity.ok().body(usuarioService.update(requestMap));
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -66,20 +66,12 @@ public class UsuarioController {
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<String> eliminarUsuario(@PathVariable("id") String id) {
         try {
-            usuarioService.eliminarUsuario(id);
-            return ResponseEntity.ok().body(Constantes.SOLICITUD_EXITOSA);
+            return ResponseEntity.ok().body(usuarioService.eliminarUsuario(id));
+
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.badRequest().body(Constantes.OCURRIO_UN_ERROR);
         }
     }
 
-    public ResponseEntity<String> checkToken() {
-        try {
-            return usuarioService.checkToken();
-        } catch (Exception ex){
-            ex.printStackTrace();
-            return ResponseEntity.badRequest().body(Constantes.OCURRIO_UN_ERROR);
-        }
-    }
 }

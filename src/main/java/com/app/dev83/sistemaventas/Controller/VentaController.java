@@ -1,5 +1,6 @@
 package com.app.dev83.sistemaventas.Controller;
 
+import com.app.dev83.sistemaventas.Constants.Constantes;
 import com.app.dev83.sistemaventas.Entity.DetalleVenta;
 import com.app.dev83.sistemaventas.Entity.OrdenVenta;
 import com.app.dev83.sistemaventas.Service.DetalleVentaService;
@@ -7,33 +8,57 @@ import com.app.dev83.sistemaventas.Service.OrdenVentaService;
 import com.app.dev83.sistemaventas.Service.ProductoService;
 import com.app.dev83.sistemaventas.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/venta")
 public class VentaController {
 
     @Autowired
-    private ProductoService productoService;
-
-    @Autowired
     private OrdenVentaService ordenVentaService;
 
-    @Autowired
-    private DetalleVentaService detalleVentaService;
+    @PostMapping("/registrar")
+    ResponseEntity<String> registrarVenta(@RequestBody Map<String, Object> requestMap) {
+        try {
+            return ResponseEntity.ok().body(ordenVentaService.registrarVenta(requestMap));
 
-    @Autowired
-    private UsuarioService usuarioService;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.badRequest().body(Constantes.OCURRIO_UN_ERROR);
+        }
+    }
 
-    @Autowired
-    private HttpSession httpSession;
+    @GetMapping("/listar")
+    public ResponseEntity<List<OrdenVenta>> listarVentas() {
+        try {
+            return ResponseEntity.ok().body(ordenVentaService.listarVentas());
 
-    private OrdenVenta ordenVenta=  new OrdenVenta();
-    private List<DetalleVenta> detalleVentas= new ArrayList<>();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.internalServerError().body(new ArrayList<>());
+        }
+    }
+
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<String> eliminarVenta(@PathVariable Integer id) {
+        try {
+            ordenVentaService.eliminarVenta(id);
+            return ResponseEntity.ok().body(Constantes.SOLICITUD_EXITOSA);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.internalServerError().body(Constantes.OCURRIO_UN_ERROR);
+        }
+    }
+
+
+
 
 }

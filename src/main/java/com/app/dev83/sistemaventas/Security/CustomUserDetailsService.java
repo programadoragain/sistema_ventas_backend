@@ -19,24 +19,24 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    private Usuario usuarioEntity;
+    private Usuario usuario;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        //log.info("Inside loadUserByUsername {}", username);
-        usuarioEntity= usuarioRepository.findByEmail(username);
+        // log.info("Inside loadUserByUsername {}", username);
+        usuario= usuarioRepository.findByEmail(username);
 
-        if (!Objects.isNull(usuarioEntity))
+        if (!Objects.isNull(usuario))
             return new org.springframework.security.core.userdetails.User(
-                    usuarioEntity.getEmail(),
-                    usuarioEntity.getPassword(),
+                    usuario.getEmail(),
+                    usuario.getPassword(),
                     new ArrayList<>());
         else
             throw new UsernameNotFoundException("Usuario no encontrado // Autenticación incorrecta");
     }
 
     public Usuario getUserDetail() {
-        return usuarioEntity;
+        return usuario;
     }
 
 }

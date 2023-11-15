@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 
 public class DetalleVenta {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -16,9 +17,7 @@ public class DetalleVenta {
     private Producto producto;
 
     private int cantidad;
-    private Double valor;
 
-    @ManyToOne
-    private OrdenVenta ordenVenta;
+    private float valor;
 
 }
