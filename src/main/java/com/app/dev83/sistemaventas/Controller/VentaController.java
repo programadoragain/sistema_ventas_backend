@@ -24,7 +24,7 @@ public class VentaController {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            return ResponseEntity.badRequest().body(Constantes.OCURRIO_UN_ERROR);
+            return ResponseEntity.internalServerError().body(Constantes.OCURRIO_UN_ERROR);
         }
     }
 
@@ -50,8 +50,5 @@ public class VentaController {
             return ResponseEntity.internalServerError().body(Constantes.OCURRIO_UN_ERROR);
         }
     }
-
-
-
 
 }

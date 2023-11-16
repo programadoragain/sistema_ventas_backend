@@ -27,6 +27,9 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
     private OrdenVentaRepository ordenVentaRepository;
 
     @Autowired
+    private DetalleVentaService detalleVentaService;
+
+    @Autowired
     private JwtFilter jwtFilter;
 
     @Override
@@ -37,27 +40,29 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
             OrdenVenta venta = new OrdenVenta();
 
             List<DetalleVenta> detalles= new ArrayList<>();
-            mapearDetallesVenta(detalles, requestMap.get("detallesVenta"));
+            detalleVentaService.registrarDetalleVenta(detalles, requestMap.get("detalleVenta"));
             venta.setDetalleVenta(detalles);
 
             Usuario vendedor= usuarioService.usuarioActual();
             venta.setUsuario(vendedor);
 
-            venta.setMetodoPago((MetodoPago) requestMap.get("metodoPago"));
-            venta.setValorTotal(Float.parseFloat((String) requestMap.get("total")));
+            venta.setMetodoPago(MetodoPago.valueOf((String) requestMap.get("metodoPago")));
+            venta.setValorTotal(Float.parseFloat((String) requestMap.get("valorTotal")));
             venta.setFechaCreacion(new Date());
 
             ordenVentaRepository.save(venta);
 
-            return "Se registro la venta correctamente";
+            return "Se registró la venta correctamente.";
         }
         else
-            return "No se pudo registrar la venta, deben completarse todos los campos";
+            return "No se pudo registrar la venta, deben completarse todos los campos.";
 
     }
 
+    /*
     private void mapearDetallesVenta(List<DetalleVenta> detalles, Object detallesVenta) {
     }
+    */
 
     @Override
     public List<OrdenVenta> listarVentas() {
@@ -78,8 +83,8 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
     }
 
     private boolean validarVenta(Map<String, Object> requestMap) {
-        return ((requestMap.containsKey("total")) &&
-                (requestMap.containsKey("detalleVentas")) &&
-                (requestMap.containsKey("metodoPago")));
+        return ( (requestMap.containsKey("valorTotal")) &&
+                 (requestMap.containsKey("detalleVenta")) &&
+                 (requestMap.containsKey("metodoPago")) );
     }
 }

@@ -138,6 +138,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     public Usuario usuarioActual() {
-        return usuarioRepository.findByEmail(jwtFilter.getCurrentUser());
+        String usuario= jwtFilter.getCurrentUser();
+        return usuarioRepository.findByEmail(usuario);
     }
 }
