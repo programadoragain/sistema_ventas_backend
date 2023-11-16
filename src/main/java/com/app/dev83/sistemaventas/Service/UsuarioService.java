@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface UsuarioService {
 
-    void registrarUsuario(Map<String,String> requestMap);
+    String registrarUsuario(Map<String,String> requestMap);
     String update(Map<String, String> requestMap);
     String login(Map<String, String> requestMap); // return token
     List<Usuario> listarUsuarios();

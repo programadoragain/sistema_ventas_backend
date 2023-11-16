@@ -56,7 +56,7 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
 
     }
 
-    private void mapearDetallesVenta(List<DetalleVenta> detalles, String detallesVenta) {
+    private void mapearDetallesVenta(List<DetalleVenta> detalles, Object detallesVenta) {
     }
 
     @Override

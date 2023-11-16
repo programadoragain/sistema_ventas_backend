@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/api/producto")
 public class ProductoController {
 
@@ -22,12 +23,11 @@ public class ProductoController {
     @PostMapping("/registrar")
     public ResponseEntity<String> registrarProducto(@RequestBody Producto producto) {
         try {
-            productoService.guardarProducto(producto);
-            return ResponseEntity.ok().body(Constantes.SOLICITUD_EXITOSA);
+            return ResponseEntity.ok().body(productoService.registrarProducto(producto));
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            return ResponseEntity.badRequest().body(Constantes.OCURRIO_UN_ERROR);
+            return ResponseEntity.internalServerError().body(Constantes.SERVER_ERROR);
         }
     }
 
@@ -56,22 +56,22 @@ public class ProductoController {
     @PutMapping("/actualizar")
     public ResponseEntity<String> actualizarProducto(@RequestBody Producto producto) {
         try {
-            productoService.actualizarProducto(producto);
-            return ResponseEntity.ok().body(Constantes.SOLICITUD_EXITOSA);
+            return ResponseEntity.ok().body(productoService.actualizarProducto(producto));
+
         } catch (Exception ex) {
             ex.printStackTrace();
-            return ResponseEntity.badRequest().body(Constantes.OCURRIO_UN_ERROR);
+            return ResponseEntity.internalServerError().body(Constantes.SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<String> eliminarProducto(@PathVariable("id") String id) {
         try {
-            productoService.eliminarProducto(id);
-            return ResponseEntity.ok().body(Constantes.SOLICITUD_EXITOSA);
+            return ResponseEntity.ok().body(productoService.eliminarProducto(id));
+
         } catch (Exception ex) {
             ex.printStackTrace();
-            return ResponseEntity.badRequest().body(Constantes.OCURRIO_UN_ERROR);
+            return ResponseEntity.internalServerError().body(Constantes.SERVER_ERROR);
         }
     }
 

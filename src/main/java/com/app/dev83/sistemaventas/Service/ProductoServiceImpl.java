@@ -1,5 +1,6 @@
 package com.app.dev83.sistemaventas.Service;
 
+import com.app.dev83.sistemaventas.Constants.Constantes;
 import com.app.dev83.sistemaventas.Entity.Categoria;
 import com.app.dev83.sistemaventas.Entity.Producto;
 import com.app.dev83.sistemaventas.Repository.ProductoRepository;
@@ -7,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -18,6 +17,19 @@ public class ProductoServiceImpl implements ProductoService{
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Override
+    @Transactional
+    public String registrarProducto(Producto producto) {
+        try {
+            productoRepository.save(producto);
+            return Constantes.SOLICITUD_EXITOSA;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return Constantes.OCURRIO_UN_ERROR;
+        }
+    }
 
     @Override
     public List<Producto> listarProductos() {
@@ -41,19 +53,7 @@ public class ProductoServiceImpl implements ProductoService{
 
     @Override
     @Transactional
-    public Producto guardarProducto(Producto producto) {
-        try {
-            return productoRepository.save(producto);
-
-        } catch(Exception ex) {
-            ex.printStackTrace();
-            throw new RuntimeException();
-        }
-    }
-
-    @Override
-    @Transactional
-    public Producto actualizarProducto(Producto producto) {
+    public String actualizarProducto(Producto producto) {
         try {
             Producto productoEnDB = productoRepository.findById(producto.getId()).orElseThrow(RuntimeException::new);
 
@@ -63,8 +63,6 @@ public class ProductoServiceImpl implements ProductoService{
             productoEnDB.setNombre(producto.getNombre());
             productoEnDB.setMarca(producto.getMarca());
             productoEnDB.setModelo(producto.getModelo());
-            //productoEnDB.setCategoria(producto.getCategoria());
-            productoEnDB.setCategoria(categoria);
             productoEnDB.setCodigoBarra(producto.getCodigoBarra());
             productoEnDB.setDescripcion(producto.getDescripcion());
             productoEnDB.setValorUsd(producto.getValorUsd());
@@ -72,22 +70,25 @@ public class ProductoServiceImpl implements ProductoService{
             productoEnDB.setStock(producto.getStock());
             productoEnDB.setActivo(producto.isActivo());
 
-            return productoRepository.save(productoEnDB);
+            productoRepository.save(productoEnDB);
+            return Constantes.SOLICITUD_EXITOSA;
 
         } catch(Exception ex) {
             ex.printStackTrace();
-            throw new RuntimeException();
+            return Constantes.OCURRIO_UN_ERROR;
         }
     }
 
     @Override
-    public void eliminarProducto(String id) {
+    public String eliminarProducto(String id) {
         try {
             productoRepository.deleteById(parseInt(id));
+            return Constantes.SOLICITUD_EXITOSA;
 
         } catch(Exception ex) {
             ex.printStackTrace();
-            throw new RuntimeException();
+            return Constantes.OCURRIO_UN_ERROR;
         }
     }
+
 }

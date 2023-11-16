@@ -22,19 +22,19 @@ public class Producto {
     @NotNull
     private String nombre;
     private String codigoBarra;
-    private String descripcion;
 
     @NotNull
     private String marca;
 
     private String modelo;
+    private String descripcion;
 
     @NotNull
     @ManyToOne
     private Categoria categoria;
 
     @Column(name = "valor_usd")
-    private Double valorUsd;
+    private Float valorUsd;
 
     @NotNull
     private TipoDeCambio tipoDeCambio;

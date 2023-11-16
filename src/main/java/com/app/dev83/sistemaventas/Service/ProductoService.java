@@ -3,6 +3,7 @@ package com.app.dev83.sistemaventas.Service;
 import com.app.dev83.sistemaventas.Entity.Producto;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductoService {
 
@@ -10,8 +11,8 @@ public interface ProductoService {
     List<Producto> listarProductosPorCategoria(String idCategoria);
     List<Producto> listarProductosEnStock();
     Producto obtenerProductoPorId(String id);
-    Producto guardarProducto(Producto producto);
-    Producto actualizarProducto(Producto producto);
-    void eliminarProducto(String id);
+    String registrarProducto(Producto producto);
+    String actualizarProducto(Producto producto);
+    String eliminarProducto(String id);
 
 }

@@ -1,5 +1,6 @@
 package com.app.dev83.sistemaventas.Service;
 
+import com.app.dev83.sistemaventas.Constants.Constantes;
 import com.app.dev83.sistemaventas.Entity.Rol;
 import com.app.dev83.sistemaventas.Entity.Usuario;
 import com.app.dev83.sistemaventas.Jwt.JwtFilter;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,33 +45,26 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
     private JwtFilter jwtFilter;
 
-    public void registrarUsuario(Map<String, String> requestMap) {
-        try {
-            if (validarRegistroMap(requestMap))
-                usuarioRepository.save(crearUsuario(requestMap));
-            else
-                log.info("Datos de usuario incompleto: {}", requestMap);
+    public String registrarUsuario(Map<String, String> requestMap) {
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (validarRegistroMap(requestMap)) {
+            usuarioRepository.save(crearUsuario(requestMap));
+            return Constantes.SOLICITUD_EXITOSA;
         }
+
+        return Constantes.OCURRIO_UN_ERROR;
     }
 
-    @Override
-    public String update(Map<String, String> requestMap) {
-        try {
-            if (jwtFilter.isAdmin()) {
-                Optional<Usuario> optUsuario= usuarioRepository.findById(Integer.parseInt(requestMap.get("id")));
-                if (optUsuario.isPresent()) {
-                    //usuarioRepository.save(crearUsuario(requestMap));
-                    return "Usuario actualizado";
-                }
-                return "El usuario no existe";
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return "Ocurrió un problema al actualizar la información";
+    private Usuario crearUsuario(Map<String,String> requestMap) {
+        Usuario usuario= new Usuario();
+        usuario.setNombre(requestMap.get("nombre"));
+        usuario.setApellido(requestMap.get("apellido"));
+        usuario.setEmail(requestMap.get("email"));
+        usuario.setPassword(passwordEncoder.encode(requestMap.get("password")));
+        usuario.setRole(Rol.ADMIN);
+        usuario.setStatus("true");
+
+        return usuario;
     }
 
     @Override
@@ -89,6 +84,23 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
 
         return "Ocurrió un error de autenticación";
+    }
+
+    @Override
+    public String update(Map<String, String> requestMap) {
+        try {
+            if (jwtFilter.isAdmin()) {
+                Optional<Usuario> optUsuario= usuarioRepository.findById(Integer.parseInt(requestMap.get("id")));
+                if (optUsuario.isPresent()) {
+                    //usuarioRepository.save(crearUsuario(requestMap));
+                    return "Usuario actualizado";
+                }
+                return "El usuario no existe";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "Ocurrió un problema al actualizar la información";
     }
 
     @Override
@@ -120,21 +132,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
     }
 
-    private Usuario crearUsuario(Map<String,String> requestMap) {
-        Usuario usuario= new Usuario();
-        usuario.setNombre(requestMap.get("nombre"));
-        usuario.setApellido(requestMap.get("apellido"));
-        usuario.setEmail(requestMap.get("email"));
-        usuario.setPassword(passwordEncoder.encode(requestMap.get("password")));
-        usuario.setStatus("true");
-        usuario.setRole(Rol.USER);
-
-        return usuario;
-    }
-
     private boolean validarRegistroMap(Map<String,String> requestMap) {
-        return requestMap.containsKey("nombre") && requestMap.containsKey("apellido")
-                && requestMap.containsKey("email") && requestMap.containsKey("password");
+        return (requestMap.containsKey("nombre") && requestMap.containsKey("apellido")
+                && requestMap.containsKey("email") && requestMap.containsKey("password"));
     }
 
     public Usuario usuarioActual() {

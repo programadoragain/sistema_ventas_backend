@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/api/usuario")
 public class UsuarioController {
 
@@ -20,18 +20,17 @@ public class UsuarioController {
     UsuarioService usuarioService;
 
     @PostMapping("/registrar")
-    public ResponseEntity<String> registrarUsuario(Map<String,String> requestMap) {
-        try{
-            usuarioService.registrarUsuario(requestMap);
-            return ResponseEntity.ok().body(Constantes.SOLICITUD_EXITOSA);
+    public ResponseEntity<String> registrarUsuario(@RequestBody Map<String,String> requestMap) {
+        try {
+            return ResponseEntity.ok().body(usuarioService.registrarUsuario(requestMap));
         } catch (Exception ex) {
             ex.printStackTrace();
-            return ResponseEntity.badRequest().body(Constantes.OCURRIO_UN_ERROR);
+            return ResponseEntity.internalServerError().body(Constantes.SERVER_ERROR);
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(Map<String, String> requestMap) {
+    public ResponseEntity<String> login(@RequestBody Map<String, String> requestMap) {
         try {
             return ResponseEntity.accepted().body(usuarioService.login(requestMap));
 
