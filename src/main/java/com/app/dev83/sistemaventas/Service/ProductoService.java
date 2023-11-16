@@ -1,9 +1,7 @@
 package com.app.dev83.sistemaventas.Service;
 
 import com.app.dev83.sistemaventas.Entity.Producto;
-
 import java.util.List;
-import java.util.Map;
 
 public interface ProductoService {
 

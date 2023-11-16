@@ -1,17 +1,11 @@
 package com.app.dev83.sistemaventas.Controller;
 
 import com.app.dev83.sistemaventas.Constants.Constantes;
-import com.app.dev83.sistemaventas.Entity.DetalleVenta;
 import com.app.dev83.sistemaventas.Entity.OrdenVenta;
-import com.app.dev83.sistemaventas.Service.DetalleVentaService;
 import com.app.dev83.sistemaventas.Service.OrdenVentaService;
-import com.app.dev83.sistemaventas.Service.ProductoService;
-import com.app.dev83.sistemaventas.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
