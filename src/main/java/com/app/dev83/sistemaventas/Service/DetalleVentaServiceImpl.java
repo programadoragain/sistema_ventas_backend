@@ -20,9 +20,6 @@ public class DetalleVentaServiceImpl implements DetalleVentaService {
     private DetalleVentaRepository detalleVentaRepository;
 
     @Autowired
-    private ProductoRepository productoRepository;
-
-    @Autowired
     private ProductoService productoService;
 
     @Override
