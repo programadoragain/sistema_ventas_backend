@@ -91,4 +91,19 @@ public class ProductoServiceImpl implements ProductoService{
         }
     }
 
+    @Override
+    public void restarStock(Integer id, Integer cantidad) {
+        Producto producto = productoRepository.findById(id).orElseThrow(RuntimeException::new);
+        producto.setStock(producto.getStock() - cantidad);
+        if (producto.getStock() < 1) producto.setActivo(false);
+        productoRepository.save(producto);
+    }
+
+    @Override
+    public void sumarStock(Integer id, Integer cantidad) {
+        Producto producto = productoRepository.findById(id).orElseThrow(RuntimeException::new);
+        producto.setStock(producto.getStock() + cantidad);
+        productoRepository.save(producto);
+    }
+
 }

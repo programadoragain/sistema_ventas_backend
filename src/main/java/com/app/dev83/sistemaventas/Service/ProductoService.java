@@ -12,5 +12,6 @@ public interface ProductoService {
     String registrarProducto(Producto producto);
     String actualizarProducto(Producto producto);
     String eliminarProducto(String id);
-
+    void restarStock(Integer id, Integer cantidad);
+    void sumarStock(Integer id, Integer cantidad);
 }

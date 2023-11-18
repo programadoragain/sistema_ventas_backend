@@ -38,7 +38,7 @@ public class OrdenVenta {
     private List<DetalleVenta> detalleVenta;
 
     public String getFechaCreacionConFormato() {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/YY HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/YY HH:mm");
         return formatter.format(fechaCreacion);
     }
 }

@@ -24,7 +24,7 @@ public class VentaController {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            return ResponseEntity.internalServerError().body(Constantes.OCURRIO_UN_ERROR);
+            return ResponseEntity.internalServerError().body(Constantes.SERVER_ERROR);
         }
     }
 
