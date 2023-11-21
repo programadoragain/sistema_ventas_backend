@@ -1,43 +1,50 @@
 package com.app.dev83.sistemaventas.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.antlr.v4.runtime.misc.NotNull;
 
-
-@Entity
-@Table(name = "productos")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Entity
+@Table(name = "productos")
 public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
-    private String nombre;
-    private String codigoBarra;
+    private String codBarra;
 
-    @NotNull
+    @NotEmpty
+    @Size(min = 2, max = 32)
+    private String nombre;
+
+    @NotEmpty
+    @Size(min = 2, max = 32)
     private String marca;
 
+    @NotEmpty
+    @Size(min = 2, max = 15)
     private String modelo;
+
+    @Size(min = 2, max = 100)
     private String descripcion;
 
     @NotNull
     @ManyToOne
     private Categoria categoria;
 
-    @Column(name = "valor_usd")
-    private Float valorUsd;
+    @NotNull
+    private Moneda moneda;
 
     @NotNull
-    private TipoDeCambio tipoDeCambio;
+    private Float valor;
 
     @NotNull
     private int stock;

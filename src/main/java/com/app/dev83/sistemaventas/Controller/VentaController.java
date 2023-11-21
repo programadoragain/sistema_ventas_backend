@@ -20,7 +20,7 @@ public class VentaController {
     @PostMapping("/registrar")
     ResponseEntity<String> registrarVenta(@RequestBody Map<String, Object> requestMap) {
         try {
-            return ResponseEntity.ok().body(ordenVentaService.registrarVenta(requestMap));
+            return ResponseEntity.ok().body(ordenVentaService.registrar(requestMap));
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -31,7 +31,7 @@ public class VentaController {
     @GetMapping("/listar")
     public ResponseEntity<List<OrdenVenta>> listarVentas() {
         try {
-            return ResponseEntity.ok().body(ordenVentaService.listarVentas());
+            return ResponseEntity.ok().body(ordenVentaService.listar());
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -42,7 +42,7 @@ public class VentaController {
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<String> eliminarVenta(@PathVariable Integer id) {
         try {
-            ordenVentaService.eliminarVenta(id);
+            ordenVentaService.eliminar(id);
             return ResponseEntity.ok().body(Constantes.SOLICITUD_EXITOSA);
 
         } catch (Exception ex) {

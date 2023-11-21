@@ -6,11 +6,11 @@ import java.util.Map;
 
 public interface UsuarioService {
 
-    String registrarUsuario(Map<String,String> requestMap);
+    String registrar(Map<String,String> requestMap);
     String update(Map<String, String> requestMap);
     String login(Map<String, String> requestMap); // return token
-    List<Usuario> listarUsuarios();
-    String eliminarUsuario(String id);
+    List<Usuario> listar();
+    String eliminar(String id);
     Usuario usuarioActual();
 
 }

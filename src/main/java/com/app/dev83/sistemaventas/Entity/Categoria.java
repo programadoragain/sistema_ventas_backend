@@ -5,17 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name="categorias")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Entity
+@Table(name="categorias")
 public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String categoria;
+    private String nombre;
 }

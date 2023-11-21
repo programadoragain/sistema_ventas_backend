@@ -1,6 +1,7 @@
 package com.app.dev83.sistemaventas.Controller;
 
 import com.app.dev83.sistemaventas.Constants.Constantes;
+import com.app.dev83.sistemaventas.Dto.ProductoDTO;
 import com.app.dev83.sistemaventas.Entity.Producto;
 import com.app.dev83.sistemaventas.Service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,9 @@ public class ProductoController {
     private ProductoService productoService;
 
     @PostMapping("/registrar")
-    public ResponseEntity<String> registrarProducto(@RequestBody Producto producto) {
+    public ResponseEntity<String> registrar(@RequestBody Producto producto) {
         try {
-            return ResponseEntity.ok().body(productoService.registrarProducto(producto));
+            return ResponseEntity.ok().body(productoService.registrar(producto));
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -29,32 +30,10 @@ public class ProductoController {
         }
     }
 
-    @GetMapping("/listar")
-    public ResponseEntity<List<Producto>> listarProductos() {
-        try {
-            return ResponseEntity.ok().body(productoService.listarProductos());
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ResponseEntity.badRequest().body(new ArrayList<>());
-        }
-    }
-
-    @GetMapping("/obtener/{id}")
-    public ResponseEntity<Producto> obtenerProductoPorId(@PathVariable("id") String id) {
-        try {
-            return ResponseEntity.ok().body(productoService.obtenerProductoPorId(id));
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ResponseEntity.badRequest().body(new Producto());
-        }
-    }
-
     @PutMapping("/actualizar")
-    public ResponseEntity<String> actualizarProducto(@RequestBody Producto producto) {
+    public ResponseEntity<String> actualizar(@RequestBody Producto producto) {
         try {
-            return ResponseEntity.ok().body(productoService.actualizarProducto(producto));
+            return ResponseEntity.ok().body(productoService.actualizar(producto));
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -63,13 +42,57 @@ public class ProductoController {
     }
 
     @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<String> eliminarProducto(@PathVariable("id") String id) {
+    public ResponseEntity<String> eliminar(@PathVariable("id") String id) {
         try {
-            return ResponseEntity.ok().body(productoService.eliminarProducto(id));
+            return ResponseEntity.ok().body(productoService.eliminar(id));
 
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.internalServerError().body(Constantes.SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/listar")
+    public ResponseEntity<List<ProductoDTO>> listar() {
+        try {
+            return ResponseEntity.ok().body(productoService.listar());
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.badRequest().body(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/listarenstock")
+    public ResponseEntity<List<ProductoDTO>> listarEnStock() {
+        try {
+            return ResponseEntity.ok().body(productoService.listarEnStock());
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.badRequest().body(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/listarporcategoria/{id}")
+    public ResponseEntity<List<ProductoDTO>> listarPoCategoria(@PathVariable("id") String id) {
+        try {
+            return ResponseEntity.ok().body(productoService.listarPorCategoria(id));
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.badRequest().body(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/obtener/{id}")
+    public ResponseEntity<ProductoDTO> obtenerPorId(@PathVariable("id") String id) {
+        try {
+            return ResponseEntity.ok().body(ProductoDTO.toProductoDTO(productoService.obtenerPorId(id)));
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

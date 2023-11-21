@@ -22,7 +22,7 @@ public class UsuarioController {
     @PostMapping("/registrar")
     public ResponseEntity<String> registrarUsuario(@RequestBody Map<String,String> requestMap) {
         try {
-            return ResponseEntity.ok().body(usuarioService.registrarUsuario(requestMap));
+            return ResponseEntity.ok().body(usuarioService.registrar(requestMap));
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.internalServerError().body(Constantes.SERVER_ERROR);
@@ -43,7 +43,7 @@ public class UsuarioController {
     @GetMapping("/listar")
     public ResponseEntity<List<Usuario>> listarUsuarios() {
         try{
-            return ResponseEntity.ok().body(usuarioService.listarUsuarios());
+            return ResponseEntity.ok().body(usuarioService.listar());
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -65,7 +65,7 @@ public class UsuarioController {
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<String> eliminarUsuario(@PathVariable("id") String id) {
         try {
-            return ResponseEntity.ok().body(usuarioService.eliminarUsuario(id));
+            return ResponseEntity.ok().body(usuarioService.eliminar(id));
 
         } catch (Exception ex) {
             ex.printStackTrace();

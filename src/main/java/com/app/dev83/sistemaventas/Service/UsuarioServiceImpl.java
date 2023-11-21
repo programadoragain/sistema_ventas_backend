@@ -45,7 +45,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
     private JwtFilter jwtFilter;
 
-    public String registrarUsuario(Map<String, String> requestMap) {
+    public String registrar(Map<String, String> requestMap) {
 
         if (validarRegistroMap(requestMap)) {
             usuarioRepository.save(crearUsuario(requestMap));
@@ -61,7 +61,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuario.setApellido(requestMap.get("apellido"));
         usuario.setEmail(requestMap.get("email"));
         usuario.setPassword(passwordEncoder.encode(requestMap.get("password")));
-        usuario.setRole(Rol.ADMIN);
+        usuario.setRole(Rol.USER);
         usuario.setStatus("true");
 
         return usuario;
@@ -104,7 +104,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public List<Usuario> listarUsuarios() {
+    public List<Usuario> listar() {
         try {
             if (jwtFilter.isAdmin())
                 return usuarioRepository.findAll();
@@ -117,7 +117,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public String eliminarUsuario(String id) {
+    public String eliminar(String id) {
         try {
             Optional<Usuario> optUsuario= usuarioRepository.findById(Integer.parseInt(id));
             if (optUsuario.isPresent()) {

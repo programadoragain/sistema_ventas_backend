@@ -1,6 +1,7 @@
 package com.app.dev83.sistemaventas.Entity;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -9,12 +10,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name="orden_ventas")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Entity
+@Table(name="orden_ventas")
 public class OrdenVenta {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +27,9 @@ public class OrdenVenta {
     private MetodoPago metodoPago;
 
     @Column(name = "fecha_creacion")
-    private Date fechaCreacion;
+    private LocalDate fechaCreacion;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     @OneToMany
