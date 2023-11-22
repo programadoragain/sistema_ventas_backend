@@ -21,10 +21,11 @@ public class DetalleVentaServiceImpl implements DetalleVentaService {
 
     @Override
     @Transactional(rollbackFor=RuntimeException.class)
-    public boolean registrar(List<DetalleVenta> detalles, Object request) throws RuntimeException {
+    public boolean registrar(List<DetalleVenta> detalles, Object request, String valorTotal) throws RuntimeException {
 
         List items = (List) request;
         int tamano = items.size();
+        Float total = 0F;
 
         for (var item : items) {
             Map<String, String> requestMap = (Map<String, String>) item;
@@ -39,11 +40,16 @@ public class DetalleVentaServiceImpl implements DetalleVentaService {
                 detalles.add(detalleVentaRepository.save(renglon));
                 productoService.restarStock(producto.getId(), cantidad);
                 tamano--;
+                total += Float.parseFloat(requestMap.get("total"));
             }
         }
 
-        //Deben registrarse todos los detalles de venta, de lo contrario se hace un rollback
-        if (tamano == 0) {
+        /**
+         * Si el tamano de la lista es 0, es porque se registraron todos los detalles de venta,
+         * Si el total es igual al valorTotal, es porque coinciden con el total de la venta en OrdenVenta,
+         * de lo contrario se hace un rollback para que los registros no se almacenen.
+         */
+        if ( (tamano == 0) && (total == Float.parseFloat(valorTotal)) ) {
             return true;
         } else
             throw new RuntimeException();
