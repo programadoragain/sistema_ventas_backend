@@ -2,6 +2,7 @@ package com.app.dev83.sistemaventas.Entity;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class OrdenVenta {
     private MetodoPago metodoPago;
 
     @Column(name = "fecha_creacion")
-    private LocalDate fechaCreacion;
+    private LocalDateTime fechaCreacion;
 
     @ManyToOne
     private Usuario usuario;

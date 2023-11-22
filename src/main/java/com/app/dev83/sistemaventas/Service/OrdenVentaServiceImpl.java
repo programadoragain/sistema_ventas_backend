@@ -10,9 +10,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
 
             List<DetalleVenta> detalles= new ArrayList<>();
 
-            if (detalleVentaService.registrar(detalles, requestMap.get("detalleVenta"))) {
+            if (detalleVentaService.registrar(detalles, requestMap.get("detalleVenta"), (String) requestMap.get("valorTotal"))) {
                 venta.setDetalleVenta(detalles);
 
                 Usuario vendedor = usuarioService.usuarioActual();
@@ -48,7 +47,7 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
 
                 venta.setMetodoPago(MetodoPago.valueOf((String) requestMap.get("metodoPago")));
                 venta.setValorTotal(Float.parseFloat((String) requestMap.get("valorTotal")));
-                venta.setFechaCreacion(LocalDate.now());
+                venta.setFechaCreacion(LocalDateTime.now());
 
                 ordenVentaRepository.save(venta);
 
