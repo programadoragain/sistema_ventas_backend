@@ -18,9 +18,9 @@ public class VentaController {
     private OrdenVentaService ordenVentaService;
 
     @PostMapping("/registrar")
-    ResponseEntity<String> registrarVenta(@RequestBody Map<String, Object> requestMap) {
+    ResponseEntity<String> registrarVenta(@RequestBody OrdenVenta venta) {
         try {
-            return ResponseEntity.ok().body(ordenVentaService.registrar(requestMap));
+            return ResponseEntity.ok().body(ordenVentaService.registrar(venta));
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -29,7 +29,7 @@ public class VentaController {
     }
 
     @GetMapping("/listar")
-    public ResponseEntity<List<OrdenVenta>> listarVentas() {
+    public ResponseEntity<List<OrdenVentaDTO>> listarVentas() {
         try {
             return ResponseEntity.ok().body(ordenVentaService.listar());
 
