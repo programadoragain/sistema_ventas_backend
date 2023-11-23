@@ -58,15 +58,15 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
     }
 
     @Override
-    public List<OrdenVenta> listar() {
-        List<OrdenVenta> ventas= new ArrayList<>();
-
-        if (jwtFilter.isAdmin())
-            ventas= ordenVentaRepository.findAll();
-        else
-            ventas= ordenVentaRepository.findAllByUsuario(usuarioService.usuarioActual());
-
-        return ventas;
+    public List<OrdenVentaDTO> listar() {
+        if (jwtFilter.isAdmin()) {
+             List<OrdenVenta> ventasTotales= ordenVentaRepository.findAll();
+             return ventasTotales.stream().map(OrdenVentaDTO::toOrdenVentaDTO).collect(Collectors.toList());
+        }    
+        else {
+            List<OrdenVenta> ventasVendedor= ordenVentaRepository.findAllByUsuario(usuarioService.usuarioActual());
+            return ventasVendedor.stream().map(OrdenVentaDTO::toOrdenVentaDTO).collect(Collectors.toList());
+        }    
     }
 
     @Override
