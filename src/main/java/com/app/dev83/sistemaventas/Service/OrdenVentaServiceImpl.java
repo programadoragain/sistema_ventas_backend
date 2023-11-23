@@ -32,21 +32,21 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
 
     @Override
     @Transactional
-    public String registrar(Map<String, Object> requestMap) {
+    public String registrar(OrdenVenta ordenVenta) {
 
-        if (validarVenta(requestMap)) {
+        if (validarVenta(venta)) {
             OrdenVenta venta = new OrdenVenta();
 
             List<DetalleVenta> detalles= new ArrayList<>();
 
-            if (detalleVentaService.registrar(detalles, requestMap.get("detalleVenta"), (String) requestMap.get("valorTotal"))) {
+            if (detalleVentaService.registrar(detalles, ordenVenta) {
                 venta.setDetalleVenta(detalles);
 
                 Usuario vendedor = usuarioService.usuarioActual();
                 venta.setUsuario(vendedor);
 
-                venta.setMetodoPago(MetodoPago.valueOf((String) requestMap.get("metodoPago")));
-                venta.setValorTotal(Float.parseFloat((String) requestMap.get("valorTotal")));
+                venta.setMetodoPago(MetodoPago.valueOf((String) ordenVenta.getMetodoPago()));
+                venta.setValorTotal(Float.parseFloat((String) ordenVenta.getValorTotal()));
                 venta.setFechaCreacion(LocalDateTime.now());
 
                 ordenVentaRepository.save(venta);
@@ -75,9 +75,9 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
             ordenVentaRepository.deleteById(id);
     }
 
-    private boolean validarVenta(Map<String, Object> requestMap) {
-        return ( (requestMap.containsKey("valorTotal")) &&
-                 (requestMap.containsKey("detalleVenta")) &&
-                 (requestMap.containsKey("metodoPago")) );
+    private boolean validarVenta(OrdenVenta venta) {
+        return ( (venta.getValorTotal()) &&
+                 (venta.getDetalleVenta()) &&
+                 (venta.getMetodoPago()) );
     }
 }
