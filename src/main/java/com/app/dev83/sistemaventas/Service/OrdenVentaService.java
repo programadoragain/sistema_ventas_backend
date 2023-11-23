@@ -9,8 +9,8 @@ import java.util.Map;
 
 public interface OrdenVentaService {
 
-    String registrar(Map<String, Object> requestMap);
-    List<OrdenVenta> listar();
+    String registrar(OrdenVenta venta);
+    List<OrdenVentaDTO> listar();
     void eliminar(Integer id);
 
     /*
