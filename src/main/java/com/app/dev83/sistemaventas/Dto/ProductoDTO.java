@@ -22,7 +22,18 @@ public class ProductoDTO {
     private boolean activo;
 
     public static ProductoDTO toProductoDTO(Producto producto) {
-        return new ProductoDTO(producto.getId(), producto.getCodBarra(), producto.getNombre(), producto.getMarca(), producto.getModelo(), producto.getDescripcion(), producto.getCategoria().getNombre(), producto.getMoneda().name(), producto.getValor(), producto.getStock(), producto.isActivo());
+        return new ProductoDTO(
+                    producto.getId(),
+                    producto.getCodBarra(),
+                    producto.getNombre(),
+                    producto.getMarca(),
+                    producto.getModelo(),
+                    producto.getDescripcion(),
+                    producto.getCategoria().getNombre(),
+                    producto.getMoneda().name(),
+                    producto.getValor(),
+                    producto.getStock(),
+                    producto.isActivo());
     }
 
 }

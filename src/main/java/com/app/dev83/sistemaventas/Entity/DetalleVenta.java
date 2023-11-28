@@ -16,9 +16,9 @@ public class DetalleVenta {
     private Producto producto;
 
     @NotNull
-    private int cantidad;
+    private Integer cantidad;
 
     @NotNull
-    private float valor;
+    private Float valor;
 
 }

@@ -36,6 +36,8 @@ public class Producto {
     @Size(min = 2, max = 100)
     private String descripcion;
 
+    private String imagen;
+
     @NotNull
     @ManyToOne
     private Categoria categoria;

@@ -1,5 +1,6 @@
 package com.app.dev83.sistemaventas.Service;
 
+import com.app.dev83.sistemaventas.Dto.OrdenVentaDTO;
 import com.app.dev83.sistemaventas.Entity.DetalleVenta;
 import com.app.dev83.sistemaventas.Entity.MetodoPago;
 import com.app.dev83.sistemaventas.Entity.OrdenVenta;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class OrdenVentaServiceImpl implements OrdenVentaService {
@@ -34,19 +35,19 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
     @Transactional
     public String registrar(OrdenVenta ordenVenta) {
 
-        if (validarVenta(venta)) {
+        if (validarVenta(ordenVenta)) {
             OrdenVenta venta = new OrdenVenta();
 
             List<DetalleVenta> detalles= new ArrayList<>();
 
-            if (detalleVentaService.registrar(detalles, ordenVenta) {
+            if (detalleVentaService.registrar(detalles, ordenVenta)) {
                 venta.setDetalleVenta(detalles);
 
                 Usuario vendedor = usuarioService.usuarioActual();
                 venta.setUsuario(vendedor);
 
-                venta.setMetodoPago(MetodoPago.valueOf((String) ordenVenta.getMetodoPago()));
-                venta.setValorTotal(Float.parseFloat((String) ordenVenta.getValorTotal()));
+                venta.setMetodoPago(ordenVenta.getMetodoPago());
+                venta.setValorTotal(ordenVenta.getValorTotal());
                 venta.setFechaCreacion(LocalDateTime.now());
 
                 ordenVentaRepository.save(venta);
@@ -76,8 +77,8 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
     }
 
     private boolean validarVenta(OrdenVenta venta) {
-        return ( (venta.getValorTotal()) &&
-                 (venta.getDetalleVenta()) &&
-                 (venta.getMetodoPago()) );
+        return ( (venta.getValorTotal()>0) &&
+                 !(venta.getDetalleVenta().isEmpty()) &&
+                 !(venta.getMetodoPago().name().isEmpty()) );
     }
 }
