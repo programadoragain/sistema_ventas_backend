@@ -10,9 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.app.dev83.sistemaventas.Constants.Constantes.UPLOAD_DIRECTORY_PRODUCTS;
 import static java.lang.Integer.parseInt;
 
 @Service
@@ -23,14 +30,13 @@ public class ProductoServiceImpl implements ProductoService{
 
     @Override
     @Transactional
-    public String registrar(Producto producto) {
+    public Producto registrar(Producto producto) {
         try {
-            productoRepository.save(producto);
-            return Constantes.SOLICITUD_EXITOSA;
+            producto.setMoneda(Moneda.PESO);
+            return productoRepository.save(producto);
 
         } catch (Exception ex) {
-            ex.printStackTrace();
-            return Constantes.OCURRIO_UN_ERROR;
+            return new Producto();
         }
     }
 
@@ -44,6 +50,12 @@ public class ProductoServiceImpl implements ProductoService{
     @Override
     public List<ProductoDTO> listarPorCategoria(String idCategoria) {
         List<Producto> productos= productoRepository.findAllByCategory(Integer.parseInt(idCategoria));
+        return productos.stream().map(ProductoDTO::toProductoDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductoDTO> listarPorNombre(String nombre) {
+        List<Producto> productos= productoRepository.findAllByName(nombre);
         return productos.stream().map(ProductoDTO::toProductoDTO).collect(Collectors.toList());
     }
 
@@ -111,6 +123,34 @@ public class ProductoServiceImpl implements ProductoService{
         Producto producto = productoRepository.findById(id).orElseThrow(RuntimeException::new);
         producto.setStock(producto.getStock() + cantidad);
         productoRepository.save(producto);
+    }
+
+
+    public long cantidadElementos() {
+        return productoRepository.count();
+    }
+
+    @Override
+    public String uploadPhoto(String id, MultipartFile file) throws IOException {
+        // Crear el directorio de destino si no existe
+        Path uploadPath = Paths.get(UPLOAD_DIRECTORY_PRODUCTS);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        // Guardar el archivo
+        String fileName = id + "_" + file.getOriginalFilename();
+        Path filePath = uploadPath.resolve(fileName);
+        Files.copy(file.getInputStream(), filePath);
+
+        //actualizar productos con el link a la imagen
+
+        Producto producto= obtenerPorId(id);
+
+        producto.setImagen(fileName);
+        productoRepository.save(producto);
+
+        return "Foto cargada exitosamente: " + fileName;
     }
 
 }

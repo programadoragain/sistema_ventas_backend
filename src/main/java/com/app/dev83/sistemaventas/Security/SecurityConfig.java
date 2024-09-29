@@ -4,10 +4,12 @@ import com.app.dev83.sistemaventas.Jwt.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,15 +32,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .securityMatcher("/api/**")
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/usuario/registrar", "/api/usuario/login").permitAll()
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .httpBasic(withDefaults())
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(HttpMethod.POST, "/api/usuario/login").permitAll()
+                    .requestMatchers(HttpMethod.GET).authenticated()
+                    .requestMatchers(HttpMethod.PUT).authenticated()
+                    .requestMatchers(HttpMethod.DELETE).authenticated()
+                    .anyRequest().authenticated())
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
 
         return http.build();
     }

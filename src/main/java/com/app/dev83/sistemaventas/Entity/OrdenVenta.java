@@ -31,7 +31,7 @@ public class OrdenVenta {
     private MetodoPago metodoPago;
 
     @Column(name = "fecha_creacion")
-    private LocalDateTime fechaCreacion;
+    private LocalDate fechaCreacion;
 
     @ManyToOne
     private Usuario usuario;
@@ -57,7 +57,8 @@ public class OrdenVenta {
     */
 
     public String getFechaCreacionConFormato() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return fechaCreacion.format(formatter);
     }
 

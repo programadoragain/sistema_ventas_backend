@@ -1,6 +1,9 @@
 package com.app.dev83.sistemaventas.Service;
 
 import com.app.dev83.sistemaventas.Entity.Usuario;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -12,5 +15,6 @@ public interface UsuarioService {
     List<Usuario> listar();
     String eliminar(String id);
     Usuario usuarioActual();
+    String uploadPhoto(String id, MultipartFile file) throws IOException;
 
 }

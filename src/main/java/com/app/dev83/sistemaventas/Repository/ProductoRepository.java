@@ -11,9 +11,12 @@ import java.util.List;
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
-     @Query(value =  "select * from productos where categoria_id= :idCategoria and activo=1",  nativeQuery = true)
+     @Query(value =  "select * from productos where categoria_id= :idCategoria and activo=1", nativeQuery = true)
      List<Producto> findAllByCategory(@Param("idCategoria") Integer idCategoria);
 
      @Query(value =  "select * from productos where stock>0", nativeQuery = true)
      List<Producto> findAllStockOn();
+
+     @Query(value =  "select * from productos where nombre LIKE %:nombre% and activo=1 and stock>0", nativeQuery = true)
+     List<Producto> findAllByName(@Param("nombre") String nombre);
 }

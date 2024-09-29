@@ -9,19 +9,23 @@ import com.app.dev83.sistemaventas.Repository.UsuarioRepository;
 import com.app.dev83.sistemaventas.Security.CustomUserDetailsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.app.dev83.sistemaventas.Constants.Constantes.UPLOAD_DIRECTORY_USERS;
 
 @Slf4j
 @Service
@@ -141,4 +145,29 @@ public class UsuarioServiceImpl implements UsuarioService {
         String usuario= jwtFilter.getCurrentUser();
         return usuarioRepository.findByEmail(usuario);
     }
+
+    @Override
+    public String uploadPhoto(String id, MultipartFile file) throws IOException {
+        // Crear el directorio de destino si no existe
+        Path uploadPath = Paths.get(UPLOAD_DIRECTORY_USERS);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        // Guardar el archivo
+        String fileName = id + "_" + file.getOriginalFilename();
+        Path filePath = uploadPath.resolve(fileName);
+        Files.copy(file.getInputStream(), filePath);
+
+        //actualizar productos con el link a la imagen
+
+        Usuario usuario= usuarioRepository.findById(Integer.parseInt(id))
+                .orElseThrow(() -> new RuntimeException("El usuario no existe: " + id));
+
+        usuario.setImagen(filePath.toString());
+        usuarioRepository.save(usuario);
+
+        return "Foto cargada exitosamente: " + fileName;
+    }
+
 }

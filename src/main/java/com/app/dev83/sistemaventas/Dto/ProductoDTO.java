@@ -1,5 +1,6 @@
 package com.app.dev83.sistemaventas.Dto;
 
+import com.app.dev83.sistemaventas.Entity.Categoria;
 import com.app.dev83.sistemaventas.Entity.Producto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,10 +16,10 @@ public class ProductoDTO {
     private String marca;
     private String modelo;
     private String descripcion;
-    private String categoria;
-    private String moneda;
+    private Categoria categoria;
     private Float valor;
     private int stock;
+    private String imagen;
     private boolean activo;
 
     public static ProductoDTO toProductoDTO(Producto producto) {
@@ -29,11 +30,12 @@ public class ProductoDTO {
                     producto.getMarca(),
                     producto.getModelo(),
                     producto.getDescripcion(),
-                    producto.getCategoria().getNombre(),
-                    producto.getMoneda().name(),
+                    producto.getCategoria(),
                     producto.getValor(),
                     producto.getStock(),
-                    producto.isActivo());
+                    producto.getImagen(),
+                    producto.isActivo()
+                    );
     }
 
 }

@@ -8,8 +8,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.List;
+
+import static org.springframework.http.HttpHeaders.*;
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS;
+
 @Configuration
-public class CorsFilter {
+public class SecurityCorsFilter {
 
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilterRegistrationBean() {
@@ -18,7 +23,7 @@ public class CorsFilter {
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
-        config.setAllowCredentials(true); // Si necesitas permitir credenciales
+        config.setAllowCredentials(true);
         source.registerCorsConfiguration("/**", config);
 
         FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));

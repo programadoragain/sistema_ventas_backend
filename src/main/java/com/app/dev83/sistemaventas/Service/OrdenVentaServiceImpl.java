@@ -48,7 +48,7 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
 
                 venta.setMetodoPago(ordenVenta.getMetodoPago());
                 venta.setValorTotal(ordenVenta.getValorTotal());
-                venta.setFechaCreacion(LocalDateTime.now());
+                venta.setFechaCreacion(ordenVenta.getFechaCreacion());
 
                 ordenVentaRepository.save(venta);
 
@@ -61,7 +61,7 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
     @Override
     public List<OrdenVentaDTO> listar() {
         if (jwtFilter.isAdmin()) {
-             List<OrdenVenta> ventasTotales= ordenVentaRepository.findAll();
+             List<OrdenVenta> ventasTotales= ordenVentaRepository.findAllOrderByDate();
              return ventasTotales.stream().map(OrdenVentaDTO::toOrdenVentaDTO).collect(Collectors.toList());
         }    
         else {

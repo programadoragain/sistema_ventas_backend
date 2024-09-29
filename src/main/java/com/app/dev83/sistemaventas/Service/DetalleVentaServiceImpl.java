@@ -1,6 +1,5 @@
 package com.app.dev83.sistemaventas.Service;
 
-import com.app.dev83.sistemaventas.Dto.ProductoDTO;
 import com.app.dev83.sistemaventas.Entity.DetalleVenta;
 import com.app.dev83.sistemaventas.Entity.OrdenVenta;
 import com.app.dev83.sistemaventas.Entity.Producto;
@@ -26,7 +25,6 @@ public class DetalleVentaServiceImpl implements DetalleVentaService {
 
         List<DetalleVenta> items = venta.getDetalleVenta();
         int tamano = items.size();
-        Float total = 0F;
 
         for (var item : items) {
             Producto producto = productoService.obtenerPorId(item.getProducto().getId().toString());
@@ -40,16 +38,14 @@ public class DetalleVentaServiceImpl implements DetalleVentaService {
                 detalles.add(detalleVentaRepository.save(renglon));
                 productoService.restarStock(producto.getId(), cantidad);
                 tamano--;
-                total += item.getValor();
             }
         }
-
         /**
          * Si el tamano de la lista es 0, es porque se registraron todos los detalles de venta,
          * Si el total es igual al valorTotal, es porque coinciden con el total de la venta en OrdenVenta,
          * de lo contrario se hace un rollback para que los registros no se almacenen.
          */
-        if ( (tamano == 0) && (total.equals(venta.getValorTotal())) ) {
+        if ( (tamano == 0) ) {
             return true;
         } else
             throw new RuntimeException();
