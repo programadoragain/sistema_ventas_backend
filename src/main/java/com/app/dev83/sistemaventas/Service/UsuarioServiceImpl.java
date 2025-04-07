@@ -1,6 +1,7 @@
 package com.app.dev83.sistemaventas.Service;
 
 import com.app.dev83.sistemaventas.Constants.Constantes;
+import com.app.dev83.sistemaventas.Entity.Producto;
 import com.app.dev83.sistemaventas.Entity.Rol;
 import com.app.dev83.sistemaventas.Entity.Usuario;
 import com.app.dev83.sistemaventas.Jwt.JwtFilter;
@@ -9,19 +10,23 @@ import com.app.dev83.sistemaventas.Repository.UsuarioRepository;
 import com.app.dev83.sistemaventas.Security.CustomUserDetailsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.app.dev83.sistemaventas.Constants.Constantes.UPLOAD_DIRECTORY_USERS;
 
 @Slf4j
 @Service
@@ -45,18 +50,20 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
     private JwtFilter jwtFilter;
 
-    public String registrar(Map<String, String> requestMap) {
-
-        if (validarRegistroMap(requestMap)) {
-            usuarioRepository.save(crearUsuario(requestMap));
-            return Constantes.SOLICITUD_EXITOSA;
+    public Usuario registrar(Map<String, String> requestMap) {
+        try {
+            if (validarRegistroMap(requestMap)) {
+                return usuarioRepository.save(crearUsuario(requestMap));
+            } else {
+                throw new RuntimeException("Error en el registro");
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Error en el registro");
         }
-
-        return Constantes.OCURRIO_UN_ERROR;
     }
 
-    private Usuario crearUsuario(Map<String,String> requestMap) {
-        Usuario usuario= new Usuario();
+    private Usuario crearUsuario(Map<String, String> requestMap) {
+        Usuario usuario = new Usuario();
         usuario.setNombre(requestMap.get("nombre"));
         usuario.setApellido(requestMap.get("apellido"));
         usuario.setEmail(requestMap.get("email"));
@@ -74,10 +81,12 @@ public class UsuarioServiceImpl implements UsuarioService {
                     new UsernamePasswordAuthenticationToken(requestMap.get("email"), requestMap.get("password")));
 
             if (authentication.isAuthenticated()) {
-                if (customUserDetailsService.getUserDetail().getStatus().equalsIgnoreCase("true"))
-                    return "{\"token\":\"" + jwtUtil.generateToken(customUserDetailsService.getUserDetail().getEmail(), customUserDetailsService.getUserDetail().getRole().name()) + "\"}";
-                else
+
+                if (customUserDetailsService.getUserDetail().getStatus().equalsIgnoreCase("true")) {
+                    return "{\"token\":\"" + jwtUtil.generateToken(customUserDetailsService.getUserDetail().getEmail(), buscarUsuario(requestMap.get("email")).getNombre(), customUserDetailsService.getUserDetail().getRole().name()) + "\"}";
+                }else {
                     return "Autenticación incorrecta";
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -90,7 +99,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     public String update(Map<String, String> requestMap) {
         try {
             if (jwtFilter.isAdmin()) {
-                Optional<Usuario> optUsuario= usuarioRepository.findById(Integer.parseInt(requestMap.get("id")));
+                Optional<Usuario> optUsuario = usuarioRepository.findById(Integer.parseInt(requestMap.get("id")));
                 if (optUsuario.isPresent()) {
                     //usuarioRepository.save(crearUsuario(requestMap));
                     return "Usuario actualizado";
@@ -106,8 +115,9 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public List<Usuario> listar() {
         try {
-            if (jwtFilter.isAdmin())
+            if (jwtFilter.isAdmin()) {
                 return usuarioRepository.findAll();
+            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -119,12 +129,13 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public String eliminar(String id) {
         try {
-            Optional<Usuario> optUsuario= usuarioRepository.findById(Integer.parseInt(id));
+            Optional<Usuario> optUsuario = usuarioRepository.findById(Integer.parseInt(id));
             if (optUsuario.isPresent()) {
                 usuarioRepository.deleteById(Integer.parseInt(id));
                 return "Se eliminó correctamente el usuario";
-            } else
+            } else {
                 return "El usuario no existe";
+            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -132,13 +143,41 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
     }
 
-    private boolean validarRegistroMap(Map<String,String> requestMap) {
+    private boolean validarRegistroMap(Map<String, String> requestMap) {
         return (requestMap.containsKey("nombre") && requestMap.containsKey("apellido")
                 && requestMap.containsKey("email") && requestMap.containsKey("password"));
     }
 
     public Usuario usuarioActual() {
-        String usuario= jwtFilter.getCurrentUser();
+        String usuario = jwtFilter.getCurrentUser();
         return usuarioRepository.findByEmail(usuario);
     }
+
+    public Usuario buscarUsuario(String email) {
+        return usuarioRepository.findByEmail(email);
+    }
+
+    @Override
+    public String uploadPhoto(String id, MultipartFile file) throws IOException {
+        // Crear el directorio de destino si no existe
+        Path uploadPath = Paths.get(UPLOAD_DIRECTORY_USERS);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        // Guardar el archivo
+        String fileName = id + "_" + file.getOriginalFilename();
+        Path filePath = uploadPath.resolve(fileName);
+        Files.copy(file.getInputStream(), filePath);
+
+        //actualizar productos con el link a la imagen
+        Usuario usuario = usuarioRepository.findById(Integer.parseInt(id))
+                .orElseThrow(() -> new RuntimeException("El usuario no existe: " + id));
+
+        usuario.setImagen(fileName);
+        usuarioRepository.save(usuario);
+
+        return "Foto cargada exitosamente: " + fileName;
+    }
+
 }

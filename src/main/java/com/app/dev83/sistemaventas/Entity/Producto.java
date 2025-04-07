@@ -22,31 +22,28 @@ public class Producto {
     private String codBarra;
 
     @NotEmpty
-    @Size(min = 2, max = 32)
+    @Size(min = 1, max = 32)
     private String nombre;
 
     @NotEmpty
     @Size(min = 2, max = 32)
     private String marca;
 
-    @NotEmpty
-    @Size(min = 2, max = 15)
+    @Size(max = 15)
     private String modelo;
 
-    @Size(min = 2, max = 100)
     private String descripcion;
+
+    private String imagen; //Se almacena solo el nombre
 
     @NotNull
     @ManyToOne
     private Categoria categoria;
 
-    @NotNull
     private Moneda moneda;
 
-    @NotNull
     private Float valor;
 
-    @NotNull
     private int stock;
 
     private boolean activo;

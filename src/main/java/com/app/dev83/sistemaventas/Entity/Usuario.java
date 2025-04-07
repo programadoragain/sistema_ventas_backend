@@ -22,4 +22,5 @@ public class Usuario {
     private String password;
     private Rol role;
     private String status;
+    private String imagen;
 }

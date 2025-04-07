@@ -3,9 +3,12 @@ package com.app.dev83.sistemaventas.Entity;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +31,7 @@ public class OrdenVenta {
     private MetodoPago metodoPago;
 
     @Column(name = "fecha_creacion")
-    private LocalDateTime fechaCreacion;
+    private LocalDate fechaCreacion;
 
     @ManyToOne
     private Usuario usuario;
@@ -37,8 +40,26 @@ public class OrdenVenta {
     @Column(name = "detalle_ventas")
     private List<DetalleVenta> detalleVenta;
 
-    public String getFechaCreacionConFormato() {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/YY HH:mm");
-        return formatter.format(fechaCreacion);
+    /*
+    @JsonCreator
+    public OrdenVenta(@JsonProperty("valorTotal") String valorTotal,
+                      @JsonProperty("metodoPago") String metodoPago,
+                      @JsonProperty("detalleVenta") List<DetalleVenta> detalleVenta) {
+
+        this.valorTotal = Float.parseFloat(valorTotal);
+        this.metodoPago = MetodoPago.valueOf(metodoPago);
+        this.detalleVenta = detalleVenta;
+        this.id = null;
+        this.fechaCreacion = null;
+        this.usuario = null;
     }
+
+    */
+
+    public String getFechaCreacionConFormato() {
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+        return fechaCreacion.format(formatter);
+    }
+
 }

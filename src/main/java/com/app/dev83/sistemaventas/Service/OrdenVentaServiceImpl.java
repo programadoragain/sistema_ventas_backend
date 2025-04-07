@@ -1,5 +1,6 @@
 package com.app.dev83.sistemaventas.Service;
 
+import com.app.dev83.sistemaventas.Dto.OrdenVentaDTO;
 import com.app.dev83.sistemaventas.Entity.DetalleVenta;
 import com.app.dev83.sistemaventas.Entity.MetodoPago;
 import com.app.dev83.sistemaventas.Entity.OrdenVenta;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class OrdenVentaServiceImpl implements OrdenVentaService {
@@ -32,22 +33,22 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
 
     @Override
     @Transactional
-    public String registrar(Map<String, Object> requestMap) {
+    public String registrar(OrdenVenta ordenVenta) {
 
-        if (validarVenta(requestMap)) {
+        if (validarVenta(ordenVenta)) {
             OrdenVenta venta = new OrdenVenta();
 
             List<DetalleVenta> detalles= new ArrayList<>();
 
-            if (detalleVentaService.registrar(detalles, requestMap.get("detalleVenta"), (String) requestMap.get("valorTotal"))) {
+            if (detalleVentaService.registrar(detalles, ordenVenta)) {
                 venta.setDetalleVenta(detalles);
 
                 Usuario vendedor = usuarioService.usuarioActual();
                 venta.setUsuario(vendedor);
 
-                venta.setMetodoPago(MetodoPago.valueOf((String) requestMap.get("metodoPago")));
-                venta.setValorTotal(Float.parseFloat((String) requestMap.get("valorTotal")));
-                venta.setFechaCreacion(LocalDateTime.now());
+                venta.setMetodoPago(ordenVenta.getMetodoPago());
+                venta.setValorTotal(ordenVenta.getValorTotal());
+                venta.setFechaCreacion(ordenVenta.getFechaCreacion());
 
                 ordenVentaRepository.save(venta);
 
@@ -58,15 +59,15 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
     }
 
     @Override
-    public List<OrdenVenta> listar() {
-        List<OrdenVenta> ventas= new ArrayList<>();
-
-        if (jwtFilter.isAdmin())
-            ventas= ordenVentaRepository.findAll();
-        else
-            ventas= ordenVentaRepository.findAllByUsuario(usuarioService.usuarioActual());
-
-        return ventas;
+    public List<OrdenVentaDTO> listar() {
+        if (jwtFilter.isAdmin()) {
+             List<OrdenVenta> ventasTotales= ordenVentaRepository.findAllOrderDes();
+             return ventasTotales.stream().map(OrdenVentaDTO::toOrdenVentaDTO).collect(Collectors.toList());
+        }    
+        else {
+            List<OrdenVenta> ventasVendedor= ordenVentaRepository.findAllByUsuario(usuarioService.usuarioActual());
+            return ventasVendedor.stream().map(OrdenVentaDTO::toOrdenVentaDTO).collect(Collectors.toList());
+        }    
     }
 
     @Override
@@ -75,9 +76,9 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
             ordenVentaRepository.deleteById(id);
     }
 
-    private boolean validarVenta(Map<String, Object> requestMap) {
-        return ( (requestMap.containsKey("valorTotal")) &&
-                 (requestMap.containsKey("detalleVenta")) &&
-                 (requestMap.containsKey("metodoPago")) );
+    private boolean validarVenta(OrdenVenta venta) {
+        return ( (venta.getValorTotal()>0) &&
+                 !(venta.getDetalleVenta().isEmpty()) &&
+                 !(venta.getMetodoPago().name().isEmpty()) );
     }
 }

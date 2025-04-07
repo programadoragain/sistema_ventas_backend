@@ -13,7 +13,9 @@ public class CategoriaDTO {
     String nombre;
 
     public static CategoriaDTO toCategoriaDTO(Categoria categoria) {
-        return new CategoriaDTO(categoria.getId(), categoria.getNombre());
+        return new CategoriaDTO(
+                    categoria.getId(),
+                    categoria.getNombre());
     }
 
 }
