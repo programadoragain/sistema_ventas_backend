@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface UsuarioService {
 
-    String registrar(Map<String,String> requestMap);
+    Usuario registrar(Map<String,String> requestMap);
     String update(Map<String, String> requestMap);
     String login(Map<String, String> requestMap); // return token
     List<Usuario> listar();

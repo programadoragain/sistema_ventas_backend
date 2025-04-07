@@ -7,7 +7,7 @@ public class Constantes {
     public static final String DATOS_INVALIDOS = "Los datos son inválidos";
     public static final String ACCESO_DENEGADO= "Acceso denegado ";
     public static final String UBICACION_ALMACENAMIENTO = "C:\\Users\\android-pc38562\\Desktop";
-    public static final String UPLOAD_DIRECTORY_USERS = System.getProperty("user.home") + "/uploads/imagenes/usuarios";
-    public static final String UPLOAD_DIRECTORY_PRODUCTS = System.getProperty("user.home") + "/uploads/imagenes/productos";
+    public static final String UPLOAD_DIRECTORY_USERS = System.getProperty("user.home") + "\\uploads\\imagenes\\usuarios";
+    public static final String UPLOAD_DIRECTORY_PRODUCTS = System.getProperty("user.home") + "\\uploads\\imagenes\\productos";
 }
  

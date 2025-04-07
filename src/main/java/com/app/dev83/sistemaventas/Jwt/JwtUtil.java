@@ -18,9 +18,10 @@ public class JwtUtil {
     @Value("${jwt.token.secret}")
     private String secretKey;
 
-    public String generateToken(String username, String role){
+    public String generateToken(String username, String name, String role){
         Map<String, Object> claims= new HashMap<>();
         claims.put("subject", username);
+        claims.put("name", name);
         claims.put("role", role);
 
         long expirationTime = 2592000L * 1000L;

@@ -1,12 +1,17 @@
 package com.app.dev83.sistemaventas.Entity;
 
-import jakarta.persistence.*;
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -21,17 +26,19 @@ public class Gasto {
     @NotNull
     private String categoria;
 
+    private String nombreProveedor;
+
     @NotNull
     private String descripcion;
 
     @NotNull
-    float monto;
+    private Float monto;
 
     @NotNull
     @Column(name = "fecha_pago")
-    LocalDate fechaPago;
+    private LocalDate fechaPago;
 
     @NotNull
     @Column(name = "forma_pago")
-    String formaPago;
+    private String formaPago;
 }

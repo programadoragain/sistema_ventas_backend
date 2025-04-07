@@ -33,6 +33,7 @@ public class ProductoServiceImpl implements ProductoService{
     public Producto registrar(Producto producto) {
         try {
             producto.setMoneda(Moneda.PESO);
+            producto.setActivo(producto.getStock() > 0);
             return productoRepository.save(producto);
 
         } catch (Exception ex) {
@@ -87,7 +88,7 @@ public class ProductoServiceImpl implements ProductoService{
             productoEnDB.setValor(producto.getValor());
             productoEnDB.setMoneda(producto.getMoneda());
             productoEnDB.setStock(producto.getStock());
-            productoEnDB.setActivo(producto.isActivo());
+            productoEnDB.setActivo(producto.getStock() > 0);
 
             productoRepository.save(productoEnDB);
             return Constantes.SOLICITUD_EXITOSA;

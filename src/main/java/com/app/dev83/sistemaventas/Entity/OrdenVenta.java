@@ -58,7 +58,7 @@ public class OrdenVenta {
 
     public String getFechaCreacionConFormato() {
         //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
         return fechaCreacion.format(formatter);
     }
 

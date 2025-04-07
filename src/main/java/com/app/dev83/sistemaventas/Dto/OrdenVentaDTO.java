@@ -1,14 +1,15 @@
 package com.app.dev83.sistemaventas.Dto;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.app.dev83.sistemaventas.Entity.DetalleVenta;
 import com.app.dev83.sistemaventas.Entity.OrdenVenta;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -28,6 +29,6 @@ public class OrdenVentaDTO {
             ordenVenta.getMetodoPago().name(),
             ordenVenta.getFechaCreacionConFormato(),
             ordenVenta.getUsuario().getNombre(),
-            ordenVenta.getDetalleVenta().stream().unordered().collect(Collectors.toList()));
+            new ArrayList<>(ordenVenta.getDetalleVenta()));
   }
 }

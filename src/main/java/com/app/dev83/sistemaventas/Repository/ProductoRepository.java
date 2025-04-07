@@ -17,6 +17,6 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
      @Query(value =  "select * from productos where stock>0", nativeQuery = true)
      List<Producto> findAllStockOn();
 
-     @Query(value =  "select * from productos where nombre LIKE %:nombre% and activo=1 and stock>0", nativeQuery = true)
+     @Query(value =  "select * from productos p where LOWER(p.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')) and p.activo=1 and p.stock>0", nativeQuery = true)
      List<Producto> findAllByName(@Param("nombre") String nombre);
 }

@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.app.dev83.sistemaventas.Entity.OrdenVenta;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.dev83.sistemaventas.Dto.OrdenVentaDTO;
 import com.app.dev83.sistemaventas.Service.DashboardService;
 
 @RestController
@@ -39,10 +42,10 @@ public class DashboardController {
         }
     }
 
-    @GetMapping("/dataWidget/productos")
-    public ResponseEntity<Map<String, String>> cardProductos() {
+    @GetMapping("/dataWidget/productos/{fecha}")
+    public ResponseEntity<Map<String, String>> cardProductos(@PathVariable("fecha") String fecha) {
         try {
-            return ResponseEntity.accepted().body(dashboardService.cardProductos());
+            return ResponseEntity.accepted().body(dashboardService.cardProductos(fecha));
 
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(new HashMap<>());
@@ -68,4 +71,25 @@ public class DashboardController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+    @GetMapping("/dataChart/grafico-torta")
+    public ResponseEntity<List<Map<String, Object>>> graficoTorta() {
+        try {
+            return ResponseEntity.accepted().body(dashboardService.graficoTorta1());
+
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/dataSale/listarVentas/{fecha}")
+    public ResponseEntity<List<OrdenVentaDTO>> listarVentaDia(@PathVariable("fecha") String fecha) {
+        try {
+            return ResponseEntity.accepted().body(dashboardService.listarVentaPorDia(fecha));
+
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }

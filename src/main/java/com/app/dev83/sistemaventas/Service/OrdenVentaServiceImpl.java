@@ -61,7 +61,7 @@ public class OrdenVentaServiceImpl implements OrdenVentaService {
     @Override
     public List<OrdenVentaDTO> listar() {
         if (jwtFilter.isAdmin()) {
-             List<OrdenVenta> ventasTotales= ordenVentaRepository.findAllOrderByDate();
+             List<OrdenVenta> ventasTotales= ordenVentaRepository.findAllOrderDes();
              return ventasTotales.stream().map(OrdenVentaDTO::toOrdenVentaDTO).collect(Collectors.toList());
         }    
         else {

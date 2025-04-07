@@ -10,4 +10,5 @@ public interface GastoService {
     Gasto registrar(Gasto gasto);
     Gasto actualizar(Gasto gasto);
     String eliminar(String id);
+    Float totalGastos(String fecha);
 }
